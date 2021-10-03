@@ -42,7 +42,7 @@ func (e *Environment) setPort(port string) {
 }
 
 func (e *Environment) setWriteTimeout(timeout int) {
-	var p = kingpin.Arg("writetimeout","Write Time Out").Default(string(timeout)).Int()
+	var p = kingpin.Arg("write_timeout","Write Time Out").Default(string(timeout)).Int()
 	var str = fmt.Sprintf("%d", *p)
 	if str == "" {
 		e.WriteTimeout = time.Duration(timeout) * time.Second
@@ -53,7 +53,7 @@ func (e *Environment) setWriteTimeout(timeout int) {
 }
 
 func (e *Environment) setReadTimeout(timeout int) {
-	var p = kingpin.Arg("readtimeout","Read Time Out").Default(string(timeout)).Int()
+	var p = kingpin.Arg("read_timeout","Read Time Out").Default(string(timeout)).Int()
 	var str = fmt.Sprintf("%d", *p)
 	if str == "" {
 		e.ReadTimeout = time.Duration(timeout) * time.Second
