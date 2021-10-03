@@ -3,15 +3,15 @@ package main
 import (
     "fmt"
 	"log"
-
-	"github.com/madasatya6/go-native/system/feature"
+    "net/http"
+	"github.com/madasatya6/go-native/system"
 )
 
 func main() {
     fmt.Println("Golang Clean Architecture")
 	
-	//fmt.Printf("%T", router)
-    router := feature.Init()
+	systems := system.Init()
+    router := systems.Route
     fmt.Println("Connected to port 9090")
     log.Fatal(http.ListenAndServe(":9090", router))
 }

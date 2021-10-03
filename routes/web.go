@@ -5,10 +5,10 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func Init() *mux.RouterConnected {
-	router := mux.NewRouter()
-	router.HandleFunc("/", index).Methods("GET")
-	return router
+func Init() *mux.Router {
+	route := mux.NewRouter()
+	route.HandleFunc("/", index).Methods("GET")
+	return route
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
