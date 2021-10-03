@@ -16,12 +16,13 @@ func main() {
 	
 	systems := system.Init()
     router := systems.Route
-    fmt.Println("Connected to port 9090")
+    env := systems.Env
+    fmt.Println("Connected to port ", env.Port)
 
     lock := make(chan error)
     srv := &http.Server{
         Handler:      router,
-        Addr:         "127.0.0.1:9090",
+        Addr:         env.Port,
         WriteTimeout: 15 * time.Second,
         ReadTimeout:  15 * time.Second,
     }
