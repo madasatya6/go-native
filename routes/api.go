@@ -1,6 +1,7 @@
 package routes 
 
 import (
+	"encoding/json"
 	"net/http"
 	"github.com/gorilla/mux"
 )
@@ -11,5 +12,9 @@ func APIRoute(route *mux.Router) *mux.Router {
 }
 
 func apimux(w http.ResponseWriter, r *http.Request) {
-    w.Write([]byte("Routing API mux !"))
+	response := map[string]interface{}{
+		"status": true,
+		"message": "Hallo Gorilla Mux!",
+	}
+    json.NewEncoder(w).Encode(response)
 }
