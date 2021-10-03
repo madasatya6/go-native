@@ -7,22 +7,33 @@ import (
 )
 
 type SystemRoute interface{
-	WebRoute()
-	//APIRoute()
+	WebRoute(route *mux.Router)
+	APIRoute(route *mux.Router)
 }
 
 type typeRoute struct {
 	Web *mux.Router
-	//API *mux.Router
+	API *mux.Router
 }
 
 func (t *typeRoute) WebRoute(route *mux.Router) {
 	t.Web = routes.WebRoute(route)
 }
 
+func (t *typeRoute) APIRoute(route *mux.Router) {
+	api := route.PathPrefix("/api").Subrouter()
+	t.API = routes.APIRoute(api)
+}
+
 func Init() *mux.Router {
+
 	var kind typeRoute
+	var system SystemRoute
+
 	route := mux.NewRouter()
-	kind.WebRoute(route)
+	system = &kind
+
+	system.WebRoute(route)
+	system.APIRoute(route)
 	return route
 }
