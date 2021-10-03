@@ -1,12 +1,14 @@
 package route
 
 import (
+	"net/http"
+	
 	"github.com/gorilla/mux"
-
 	"github.com/madasatya6/go-native/routes"
 )
 
 type SystemRoute interface{
+	StaticAsset(route *mux.Router)
 	WebRoute(route *mux.Router)
 	APIRoute(route *mux.Router)
 }
@@ -14,6 +16,7 @@ type SystemRoute interface{
 type typeRoute struct {
 	Web *mux.Router
 	API *mux.Router
+	Asset *mux.Route
 }
 
 func (t *typeRoute) WebRoute(route *mux.Router) {
@@ -25,6 +28,10 @@ func (t *typeRoute) APIRoute(route *mux.Router) {
 	t.API = routes.APIRoute(api)
 }
 
+func (t *typeRoute) StaticAsset(route *mux.Router) {
+	t.Asset = route.PathPrefix("/assets").Handler(http.FileServer(http.Dir("./resource/assets/")))
+}
+
 func Init() *mux.Router {
 
 	var kind typeRoute
@@ -33,6 +40,7 @@ func Init() *mux.Router {
 	route := mux.NewRouter()
 	system = &kind
 
+	system.StaticAsset(route)
 	system.WebRoute(route)
 	system.APIRoute(route)
 	return route
