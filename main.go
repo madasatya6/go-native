@@ -3,7 +3,6 @@ package main
 import (
     "fmt"
 	"log"
-    "time"
     "sync"
     "net/http"
 
@@ -23,8 +22,8 @@ func main() {
     srv := &http.Server{
         Handler:      router,
         Addr:         env.Port,
-        WriteTimeout: 15 * time.Second,
-        ReadTimeout:  15 * time.Second,
+        WriteTimeout: env.WriteTimeout,
+        ReadTimeout:  env.ReadTimeout,
     }
 
     wg.Add(1)

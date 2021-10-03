@@ -2,26 +2,34 @@ package env
 
 import (
 	"fmt"
+	"time"
+	"strconv"
 
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 type EnvironmentMethod interface {
 	setPort(port string)
+	setWriteTimeout(timeout int)
+	setReadTimeout(timeout int)
 }
 
 type Environment struct {
 	Port string
-	WriteTimeout int 
-	ReadTimeout int 
+	WriteTimeout time.Duration 
+	ReadTimeout time.Duration
 	Database string
 }
 
 func Init() *Environment {
 	var method EnvironmentMethod
 	var en Environment
+
 	method = &en
 	method.setPort("9090")
+	method.setWriteTimeout(15)
+	method.setWriteTimeout(15)
+
 	return &en
 }
 
@@ -30,5 +38,27 @@ func (e *Environment) setPort(port string) {
 	e.Port = fmt.Sprintf(":%s", *p)
 	if e.Port == ":" {
 		e.Port = fmt.Sprintf(":%s", port)
+	}
+}
+
+func (e *Environment) setWriteTimeout(timeout int) {
+	var p = kingpin.Arg("writetimeout","Write Time Out").Default(string(timeout)).Int()
+	var str = fmt.Sprintf("%d", *p)
+	if str == "" {
+		e.WriteTimeout = time.Duration(timeout) * time.Second
+	} else {
+		wt, _ := strconv.Atoi(str)
+		e.WriteTimeout = time.Duration(wt) * time.Second
+	}
+}
+
+func (e *Environment) setReadTimeout(timeout int) {
+	var p = kingpin.Arg("readtimeout","Read Time Out").Default(string(timeout)).Int()
+	var str = fmt.Sprintf("%d", *p)
+	if str == "" {
+		e.ReadTimeout = time.Duration(timeout) * time.Second
+	} else {
+		wt, _ := strconv.Atoi(str)
+		e.ReadTimeout = time.Duration(wt) * time.Second
 	}
 }
