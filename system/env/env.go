@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"gopkg.in/alecthomas/kingpin.v2"
+	"github.com/madasatya6/go-native/helpers/utils"
 )
 
 type EnvironmentMethod interface {
@@ -28,7 +29,8 @@ func Init() *Environment {
 	method = &en
 	method.setPort("9090")
 	method.setWriteTimeout(15)
-	method.setWriteTimeout(15)
+	method.setReadTimeout(15)
+	kingpin.Parse()
 
 	return &en
 }
@@ -42,8 +44,8 @@ func (e *Environment) setPort(port string) {
 }
 
 func (e *Environment) setWriteTimeout(timeout int) {
-	var p = kingpin.Arg("write_timeout","Write Time Out").Default(string(timeout)).Int()
-	var str = fmt.Sprintf("%d", *p)
+	var p = kingpin.Arg("write_timeout","Write Time Out").Default(utils.IntToString(timeout)).Int()
+	var str = fmt.Sprintf("%v", *p)
 	if str == "" {
 		e.WriteTimeout = time.Duration(timeout) * time.Second
 	} else {
@@ -53,7 +55,7 @@ func (e *Environment) setWriteTimeout(timeout int) {
 }
 
 func (e *Environment) setReadTimeout(timeout int) {
-	var p = kingpin.Arg("read_timeout","Read Time Out").Default(string(timeout)).Int()
+	var p = kingpin.Arg("read_timeout","Read Time Out").Default(utils.IntToString(timeout)).Int()
 	var str = fmt.Sprintf("%d", *p)
 	if str == "" {
 		e.ReadTimeout = time.Duration(timeout) * time.Second

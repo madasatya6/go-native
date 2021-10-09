@@ -14,7 +14,7 @@ type Features struct {
 
 func Init() *Features {
 	var ft Features
-	ft.Route = route.Init()
 	ft.Env   = env.Init()
+	ft.Route = route.Init()
 	return &ft
 }
