@@ -61,7 +61,7 @@ func NotFound(w http.ResponseWriter, r *http.Request) {
 
 func NotAllowed(w http.ResponseWriter, r *http.Request) {
 	var data = map[string]interface{}{}
-	tmpl := template.Must(template.ParseFiles("resource/views/404.html"))
+	tmpl := template.Must(template.ParseFiles("resource/views/405.html"))
 	err := tmpl.Execute(w, data)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
