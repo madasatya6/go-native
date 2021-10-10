@@ -30,7 +30,9 @@ func (t *typeRoute) APIRoute(route *mux.Router) {
 }
 
 func (t *typeRoute) StaticAsset(route *mux.Router) {
-	t.Asset = route.PathPrefix("/assets").Handler(http.FileServer(http.Dir("./resource/assets/")))
+	t.Asset = route.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServer(http.Dir("./resource/assets/"))))
+	route.NotFoundHandler = http.HandlerFunc(NotFound)
+	route.MethodNotAllowedHandler = http.HandlerFunc(NotAllowed)
 }
 
 func Init() *mux.Router {
@@ -45,11 +47,19 @@ func Init() *mux.Router {
 	system.WebRoute(route)
 	system.APIRoute(route)
 
-	route.NotFoundHandler = http.HandlerFunc(NotFound)
 	return route
 }
 
 func NotFound(w http.ResponseWriter, r *http.Request) {
+	var data = map[string]interface{}{}
+	tmpl := template.Must(template.ParseFiles("resource/views/404.html"))
+	err := tmpl.Execute(w, data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+func NotAllowed(w http.ResponseWriter, r *http.Request) {
 	var data = map[string]interface{}{}
 	tmpl := template.Must(template.ParseFiles("resource/views/404.html"))
 	err := tmpl.Execute(w, data)
