@@ -16,11 +16,13 @@ func main() {
 	systems := system.Init()
     router := systems.Route
     env := systems.Env
+    systems.LogEntry.SetRouter(router)
+    
     fmt.Println("Connected to port ", env.Port)
 
     lock := make(chan error)
     srv := &http.Server{
-        Handler:      router,
+        Handler:      router, //type http.Handler
         Addr:         env.Port,
         WriteTimeout: env.WriteTimeout,
         ReadTimeout:  env.ReadTimeout,
