@@ -2,6 +2,7 @@ package route
 
 import (
 	"net/http"
+	"html/template"
 	
 	"github.com/gorilla/mux"
 	"github.com/madasatya6/go-native/routes"
@@ -43,5 +44,16 @@ func Init() *mux.Router {
 	system.StaticAsset(route)
 	system.WebRoute(route)
 	system.APIRoute(route)
+
+	route.NotFoundHandler = http.HandlerFunc(NotFound)
 	return route
+}
+
+func NotFound(w http.ResponseWriter, r *http.Request) {
+	var data = map[string]interface{}{}
+	tmpl := template.Must(template.ParseFiles("resource/views/404.html"))
+	err := tmpl.Execute(w, data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
