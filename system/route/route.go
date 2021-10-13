@@ -6,6 +6,7 @@ import (
 	
 	"github.com/gorilla/mux"
 	"github.com/madasatya6/go-native/routes"
+	"github.com/madasatya6/go-native/system/boot"
 )
 
 type SystemRoute interface{
@@ -43,6 +44,7 @@ func Init() *mux.Router {
 	route := mux.NewRouter()
 	system = &kind
 
+	route.Use(boot.Init)
 	system.StaticAsset(route)
 	system.WebRoute(route)
 	system.APIRoute(route)
