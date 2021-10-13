@@ -7,6 +7,7 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
+	"github.com/madasatya6/go-native/applications/config"
 )
 
 var DB Databases
@@ -37,18 +38,23 @@ func (d *Databases) SetPostgre(dsn string) {
 }
 
 func (d *Databases) TestPing(dbNames []string) {
-	var err Error
+	var err error
 	for i:=0; i < len(dbNames); i++ {
 		if dbNames[i] == "mysql" {
 			err = d.MySQL.Ping()
 			if err != nil {
 				log.Fatal(err.Error())
 			}
+			//set global variable
+			config.MySQL = d.MySQL
+
 		} else if dbNames[i] == "postgree" {
 			err = d.Postgre.Ping()
 			if err != nil {
 				log.Fatal(err.Error())
 			}
+			//set global variable
+			config.Postgree = d.Postgre
 		}
 	}
 
@@ -60,10 +66,10 @@ func (d *Databases) TestPing(dbNames []string) {
 func Init() *Databases {
 	var method Methods
 	method = &DB 
-	method.SetMysql()
-	method.SetPostgre()
+	method.SetMysql(MySQLDsn)
+	method.SetPostgre(postgreeDsn)
 	method.TestPing([]string{
-		'mysql'
+		"mysql",
 	})
 	return &DB
 }

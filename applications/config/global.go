@@ -2,5 +2,7 @@ package config
 
 import "database/sql"
 
+//database
 var MySQL *sql.DB
-var postgree *sql.DB
+var Postgree *sql.DB
+
