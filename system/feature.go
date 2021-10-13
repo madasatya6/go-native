@@ -6,6 +6,7 @@ import (
 	"github.com/madasatya6/go-native/system/env"
 	"github.com/madasatya6/go-native/system/logs"
 	"github.com/madasatya6/go-native/system/database"
+	"github.com/madasatya6/go-native/system/conf"
 )
 
 //Register your feature here
@@ -14,6 +15,7 @@ type Features struct {
 	Env			*env.Environment
 	LogEntry	*logs.Log
 	Databases	*database.Databases
+	Conf 		*conf.Config
 } 
 
 func Init() *Features {
@@ -22,6 +24,7 @@ func Init() *Features {
 	ft.Env		 = env.Init()
 	ft.LogEntry	 = logs.Init()
 	ft.Databases = database.Init()
+	ft.Conf		 = conf.Init()
 	return &ft
 }
 
