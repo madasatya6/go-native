@@ -66,11 +66,9 @@ func (d *Databases) TestPing(dbNames []string) {
 func Init(data map[string]interface{}) *Databases {
 	var method Methods
 	method = &DB 
-	method.SetMysql(MySQLDsn)
-	method.SetPostgre(postgreeDsn)
-	method.TestPing([]string{
-		"mysql",
-	})
+	method.SetMysql(data["mysql"].(string))
+	method.SetPostgre(data["postgre"].(string))
+	method.TestPing(data["type"].([]string))
 	return &DB
 }
 

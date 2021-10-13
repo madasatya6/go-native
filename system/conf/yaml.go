@@ -52,6 +52,7 @@ func (c *Configuration) SetDSN() {
 	c.ToDSN = map[string]interface{}{
 		"mysql" : mysql,
 		"postgre" : postgre,
+		"type" : c.Database.Type,
 	}
 }
 
