@@ -63,7 +63,7 @@ func (d *Databases) TestPing(dbNames []string) {
 	}
 }
 
-func Init() *Databases {
+func Init(data map[string]interface{}) *Databases {
 	var method Methods
 	method = &DB 
 	method.SetMysql(MySQLDsn)

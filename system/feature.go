@@ -23,8 +23,8 @@ func Init() *Features {
 	ft.Route	 = route.Init()
 	ft.Env		 = env.Init()
 	ft.LogEntry	 = logs.Init()
-	ft.Databases = database.Init()
 	ft.Conf		 = conf.Init()
+	ft.Databases = database.Init(ft.Conf.ToDSN)
 	return &ft
 }
 
