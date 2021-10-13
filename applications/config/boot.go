@@ -4,6 +4,6 @@ import "fmt"
 
 func RegisterBoots() {
 	//register action when booting here
-	fmt.Println("Ini dijalankan sebelum akses menu")
+	fmt.Println("Proses Ini dijalankan sebelum akses menu")
 }
 
