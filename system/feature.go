@@ -7,6 +7,7 @@ import (
 	"github.com/madasatya6/go-native/system/logs"
 	"github.com/madasatya6/go-native/system/database"
 	"github.com/madasatya6/go-native/system/conf"
+	"github.com/madasatya6/go-native/system/times"
 )
 
 //Register your feature here
@@ -16,6 +17,7 @@ type Features struct {
 	LogEntry	*logs.Log
 	Databases	*database.Databases
 	Conf 		*conf.Configuration
+	Time		*times.TimeConf
 } 
 
 func Init() *Features {
@@ -25,6 +27,7 @@ func Init() *Features {
 	ft.LogEntry	 = logs.Init()
 	ft.Conf		 = conf.Init()
 	ft.Databases = database.Init(ft.Conf.ToDSN)
+	ft.Time	 	 = times.Init()
 	return &ft
 }
 
