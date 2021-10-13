@@ -17,7 +17,6 @@ func main() {
     router := systems.Route
     env := systems.Env
     systems.LogEntry.SetRouter(router)
-    
     fmt.Println("Connected to port ", env.Port)
 
     lock := make(chan error)

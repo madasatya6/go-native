@@ -15,7 +15,7 @@ type Features struct {
 	Env			*env.Environment
 	LogEntry	*logs.Log
 	Databases	*database.Databases
-	Conf 		*conf.Config
+	Conf 		*conf.Configuration
 } 
 
 func Init() *Features {

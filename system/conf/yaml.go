@@ -1,8 +1,7 @@
 package conf
 
 import (
-	"fmt"
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 	"io/ioutil"
 	"log"
 )
@@ -10,14 +9,17 @@ import (
 var Config Configuration
 
 type Configuration struct{
-	DBName		string `yaml:"dbname"`
-	Host		string `yaml:"host"` 
-	Username	string `yaml:"username"`
-	Password	string `yaml:"password"`
+	Database struct{
+		DBName		string `yaml:"dbname"`
+		Host		string `yaml:"host"` 
+		Username	string `yaml:"username"`
+		Password	string `yaml:"password"`
+		Type 	  []string `yaml:"type"`
+	} `yaml:"database"`
 } 
 
 func (c *Configuration) GetConfiguration() {
-	yamlFile, err := ioutil.ReadFile("env.yaml")
+	yamlFile, err := ioutil.ReadFile("env.yml")
 	if err != nil {
 		log.Println("Yaml file error: ", err.Error())
 	}
