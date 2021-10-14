@@ -13,6 +13,9 @@ import (
 	"github.com/madasatya6/go-native/system/conf"
 )
 
+var SessionConfig Session
+var SessType SessionType
+
 type Session struct{
 	ID 				string 
 	Type 			string 
@@ -29,6 +32,10 @@ type SessionType struct{
 	Cookie		*sessions.CookieStore
 	MySQL 		*mysqlstore.MySQLStore
 	Postgre 	*pgstore.PGStore
+}
+
+func (c *SessionType) NewConfig(cfg Session) {
+	c.Config = cfg
 }
 
 func (c *SessionType) NewCookieStore() {
@@ -88,20 +95,20 @@ func (p *SessionType) NewPostgresStore(env conf.Config.Database.Postgre) {
 	p.Postgre = store
 }
 
-func SetFlashdata(c echo.Context, name, value string){
-	session, _ := SessionStore.Get(c.Request(), "fmessages")
+func SetFlashdata(w http.ResponseWriter, r *http.Request, name, value string){
+	session, _ := SessionStore.Get(r, "fmessages")
 	session.AddFlash(value, name)
 
-	session.Save(c.Request(), c.Response())
+	session.Save(r, w)
 }
 
-func GetFlashdata(c echo.Context, name string) []string {
-	session, _ := SessionStore.Get(c.Request(), "fmessages")
+func GetFlashdata(w http.ResponseWriter, r *http.Request, name string) []string {
+	session, _ := SessionStore.Get(r, "fmessages")
 	fm := session.Flashes(name)
 	//IF we have some message
 
 	if len(fm) > 0 {
-		session.Save(c.Request(), c.Response())
+		session.Save(r, w)
 		//initiate a strings slice to return messages
 		var flashes []string 
 		for _, fl := range fm {
@@ -115,6 +122,17 @@ func GetFlashdata(c echo.Context, name string) []string {
 	return nil
 }
 
-func init (){
-	E.Use(echo.WrapMiddleware(context.ClearHandler))
+func Init() *SessionType {
+	//E.Use(echo.WrapMiddleware(context.ClearHandler))
+	SessType.NewConfig(Session{
+		ID: "ID",
+		Type: config.,
+		AuthKey: config.SessionAuthKey,
+		Encryption: config.SessionEncryption,
+		Expired: 7200,
+		TimeForUpdate: 3600,
+		Path: "/",
+		HttpOnly: true
+	}).NewCookieStore()
+	return &SessType
 }
