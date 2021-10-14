@@ -10,6 +10,7 @@ import (
 	"github.com/srinathgs/mysqlstore"
 	"github.com/antonlindstrom/pgstore"
 	"github.com/madasatya6/go-native/applications/config"
+	"github.com/madasatya6/go-native/system/conf"
 )
 
 type Session struct{
@@ -42,21 +43,21 @@ func (c *SessionType) NewCookieStore() {
 	c.Cookie = store
 }
 
-func (m *SessionType) NewMysqlStore() {
+func (m *SessionType) NewMysqlStore(env conf.Config.Database.MySQL) {
 	authKey := []byte(m.Config.AuthKey)
-	//encryptionKey := []byte("my-encryption-key-very-secret123")
-	cs := fmt.Sprintf("%v:%v@tcp(%v:%v)/%v?parseTime=true&loc=Local", 
-		GetJson["mysql"]["username"], 
-		GetJson["mysql"]["password"],
-		GetJson["mysql"]["host"],
-		GetJson["mysql"]["port"],
-		GetJson["mysql"]["dbname"],
+	//encryptionKey := []byte(m.Config.Encryption)
+	dsn := fmt.Sprintf("%v:%v@tcp(%v:%v)/%v?parseTime=true&loc=Local", 
+		env.Username, 
+		env.Password,
+		env.Host,
+		env.Port,
+		env.DBName,
 	)
 
-	store, err := mysqlstore.NewMySQLStore(cs, 
+	store, err := mysqlstore.NewMySQLStore(dsn, 
 		"sessionstore", 
 		"/", 
-		3600, 
+		m.Config.Expired, 
 		authKey)
 
 	if err != nil {
@@ -70,14 +71,13 @@ func (m *SessionType) NewMysqlStore() {
 	m.MySQL = store
 } 
 
-func (p *SessionType) NewPostgresStore() *pgstore.PGStore {
+func (p *SessionType) NewPostgresStore(env conf.Config.Database.Postgre) {
 	
+	var url = fmt.Sprintf("dbname=%s user=%s password=%s host=%s sslmode=%s",
+				env.DBName, env.Username, env.Password, env.Host, env.SSLMode)
 
-	//url := "postgres://novalagung:@127.0.0.1:5432/novalagung?sslmode=disable"
-	url := "dbname=ecommerce user=postgres password=lampupijar77 host=localhost sslmode=disable"
-
-	authKey := []byte("my-auth-key-very-secret")
-	encryptionKey := []byte("my-encryption-key-very-secret123")
+	authKey := []byte(p.Config.AuthKey)
+	encryptionKey := []byte(p.Config.Encryption)
 
 	store, err := pgstore.NewPGStore(url, authKey, encryptionKey)
 	if err != nil {
@@ -85,7 +85,7 @@ func (p *SessionType) NewPostgresStore() *pgstore.PGStore {
 		os.Exit(0)
 	}
 
-	return store
+	p.Postgre = store
 }
 
 func SetFlashdata(c echo.Context, name, value string){

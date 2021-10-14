@@ -8,6 +8,7 @@ import (
 	"github.com/madasatya6/go-native/system/database"
 	"github.com/madasatya6/go-native/system/conf"
 	"github.com/madasatya6/go-native/system/times"
+	"github.com/madasatya6/go-native/system/session"
 )
 
 //Register your feature here
@@ -18,6 +19,7 @@ type Features struct {
 	Databases	*database.Databases
 	Conf 		*conf.Configuration
 	Time		*times.TimeConf
+	Session 	*session.SessionType
 } 
 
 func Init() *Features {
@@ -28,6 +30,7 @@ func Init() *Features {
 	ft.Conf		 = conf.Init()
 	ft.Databases = database.Init(ft.Conf.ToDSN)
 	ft.Time	 	 = times.Init()
+	ft.Session	 = session.Init()
 	return &ft
 }
 
