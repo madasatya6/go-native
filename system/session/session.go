@@ -1,38 +1,50 @@
 package session
 
 import (
-	"github.com/gorilla/context"
-	"github.com/gorilla/sessions"
-	"github.com/labstack/echo/v4"
-	"github.com/srinathgs/mysqlstore"
-	"github.com/antonlindstrom/pgstore"
 	"log"
 	"fmt"
 	"os"
+
+	"github.com/gorilla/context"
+	"github.com/gorilla/sessions"
+	"github.com/srinathgs/mysqlstore"
+	"github.com/antonlindstrom/pgstore"
+	"github.com/madasatya6/go-native/applications/config"
 )
 
-const SESSION_ID = "id"
-
-//pilih session yang digunakan
-var SessionStore = newCookieStore()
-
-func newCookieStore() *sessions.CookieStore {
-	authKey := []byte("my-auth-key-very-secret")
-	encryptionKey := []byte("my-encryption-key-very-secret123")
-
-	store := sessions.NewCookieStore(authKey,encryptionKey)
-	store.Options.Path = "/"
-	store.Options.MaxAge = 86400 * 7 //expired dalam seminggu
-	store.Options.HttpOnly = true
-
-	return store
+type Session struct{
+	ID 				string 
+	Type 			string 
+	AuthKey			string 
+	Encryption 		string
+	Expired			int
+	TimeForUpdate	int 
+	Path 			string 
+	HttpOnly		bool
 }
 
-func newMysqlStore() *mysqlstore.MySQLStore {
-	authKey := []byte("my-auth-key-very-secret")
-	//encryptionKey := []byte("my-encryption-key-very-secret123")
+type SessionType struct{
+	Config		Session
+	Cookie		*sessions.CookieStore
+	MySQL 		*mysqlstore.MySQLStore
+	Postgre 	*pgstore.PGStore
+}
 
-	//store, err := mysqlstore.NewMySQLStore("UN:PASS@tcp(<IP>:<PORT>)/<DB>?parseTime=true&loc=Local", <tablename>, "/", 3600, []byte("<SecretKey>"))
+func (c *SessionType) NewCookieStore() {
+	authKey := []byte(c.Config.AuthKey)
+	encryptionKey := []byte(c.Config.Encryption)
+
+	store := sessions.NewCookieStore(authKey,encryptionKey)
+	store.Options.Path = c.Config.Path
+	store.Options.MaxAge = c.Config.Expired
+	store.Options.HttpOnly = c.Config.HttpOnly
+
+	c.Cookie = store
+}
+
+func (m *SessionType) NewMysqlStore() {
+	authKey := []byte(m.Config.AuthKey)
+	//encryptionKey := []byte("my-encryption-key-very-secret123")
 	cs := fmt.Sprintf("%v:%v@tcp(%v:%v)/%v?parseTime=true&loc=Local", 
 		GetJson["mysql"]["username"], 
 		GetJson["mysql"]["password"],
@@ -51,14 +63,14 @@ func newMysqlStore() *mysqlstore.MySQLStore {
 		log.Println(err.Error())
 	}
 
-	store.Options.Path = "/"
-	store.Options.MaxAge = 86400 * 7 //expired dalam seminggu
-	store.Options.HttpOnly = true
+	store.Options.Path = m.Config.Path
+	store.Options.MaxAge = m.Config.Expired
+	store.Options.HttpOnly = m.Config.HttpOnly
 
-	return store
+	m.MySQL = store
 } 
 
-func newPostgresStore() *pgstore.PGStore {
+func (p *SessionType) NewPostgresStore() *pgstore.PGStore {
 	
 
 	//url := "postgres://novalagung:@127.0.0.1:5432/novalagung?sslmode=disable"
