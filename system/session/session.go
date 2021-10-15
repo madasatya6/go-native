@@ -5,12 +5,13 @@ import (
 	"os"
 	"fmt"
 
-	//"github.com/gorilla/context"
+	
 	"github.com/gorilla/sessions"
 	"github.com/srinathgs/mysqlstore"
 	"github.com/antonlindstrom/pgstore"
 	"github.com/madasatya6/go-native/applications/config"
 	"github.com/madasatya6/go-native/system/conf"
+	"github.com/madasatya6/go-native/helpers/utils"
 )
 
 var SessionConfig Session
@@ -35,6 +36,12 @@ type SessionType struct{
 
 func (c *SessionType) NewConfig(cfg Session) {
 	c.Config = cfg
+}
+
+func (c *SessionType) Send() {
+	utils.SessionCookie = c.Cookie
+	utils.SessionMySQL = c.MySQL
+	utils.SessionPostgre = c.Postgre
 }
 
 func (c *SessionType) NewCookieStore() {
@@ -108,38 +115,10 @@ func Init() *SessionType {
 		HttpOnly: config.HttpOnly,
 	})
 	SessType.NewCookieStore()
+	SessType.Send()
 
 	//var env = conf.Config
 	//SessType.NewMysqlStore(env)
 	//SessType.NewPostgresStore(env)
 	return &SessType
 }
-
-/*
-func SetFlashdata(w http.ResponseWriter, r *http.Request, name, value string){
-	session, _ := SessionStore.Get(r, "fmessages")
-	session.AddFlash(value, name)
-
-	session.Save(r, w)
-}
-
-func GetFlashdata(w http.ResponseWriter, r *http.Request, name string) []string {
-	session, _ := SessionStore.Get(r, "fmessages")
-	fm := session.Flashes(name)
-	//IF we have some message
-
-	if len(fm) > 0 {
-		session.Save(r, w)
-		//initiate a strings slice to return messages
-		var flashes []string 
-		for _, fl := range fm {
-			//Add message to the slice
-			flashes = append(flashes, fl.(string))
-		}
-		
-		return flashes
-	}
-
-	return nil
-}
-*/
