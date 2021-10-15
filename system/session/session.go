@@ -96,18 +96,20 @@ func (p *SessionType) NewPostgresStore(cfg conf.Configuration) {
 }
 
 func Init() *SessionType {
-	//E.Use(echo.WrapMiddleware(context.ClearHandler))
-	var env = conf.Config
+	
+	//set config from applications/config
 	SessType.NewConfig(Session{
-		ID: "ID",
+		ID: config.SessionID,
 		AuthKey: config.SessionAuthKey,
 		Encryption: config.SessionEncryption,
-		Expired: 7200,
-		TimeForUpdate: 3600,
-		Path: "/",
-		HttpOnly: true,
+		Expired: config.SessionExpired,
+		TimeForUpdate: config.SessionTimeForUpdate,
+		Path: config.SessionPath,
+		HttpOnly: config.HttpOnly,
 	})
 	SessType.NewCookieStore()
+
+	//var env = conf.Config
 	//SessType.NewMysqlStore(env)
 	//SessType.NewPostgresStore(env)
 	return &SessType

@@ -13,3 +13,7 @@ var SessionAuthKey = "my-auth-key-very-secret"
 var SessionExpired = 86400 //sehari
 var SessionTimeForUpdate = 14400
 
+var SessionID = "ID"
+var SessionPath = "/"
+var HttpOnly = true
+
