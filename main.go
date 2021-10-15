@@ -9,6 +9,18 @@ import (
 	"github.com/madasatya6/go-native/system"
 )
 
+/**
+* CLEAN ARCHITECTURE GOLANG
+* 
+* @author Mada Satya Bayu Ambika
+* @version 1.0
+* @link https://github.com/madasatya6
+* @gorillamux
+*
+* @access public
+* @note change "madasatya6/go-native" according to the project name in all .go files
+*/
+
 func main() {
     var wg sync.WaitGroup
     fmt.Println("Golang Clean Architecture")
