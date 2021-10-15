@@ -2,10 +2,10 @@ package session
 
 import (
 	"log"
-	"fmt"
 	"os"
+	"fmt"
 
-	"github.com/gorilla/context"
+	//"github.com/gorilla/context"
 	"github.com/gorilla/sessions"
 	"github.com/srinathgs/mysqlstore"
 	"github.com/antonlindstrom/pgstore"
@@ -18,7 +18,6 @@ var SessType SessionType
 
 type Session struct{
 	ID 				string 
-	Type 			string 
 	AuthKey			string 
 	Encryption 		string
 	Expired			int
@@ -29,7 +28,6 @@ type Session struct{
 
 type SessionType struct{
 	Config		Session
-	Fire 		*sessions.Session
 	Cookie		*sessions.CookieStore
 	MySQL 		*mysqlstore.MySQLStore
 	Postgre 	*pgstore.PGStore
@@ -37,17 +35,6 @@ type SessionType struct{
 
 func (c *SessionType) NewConfig(cfg Session) {
 	c.Config = cfg
-}
-
-func (c *SessionType) Use() {
-	switch c.Config.Type {
-		case "cookie":
-			c.Fire = c.Cookie
-		case "mysql":
-			c.Fire = c.MySQL
-		case "postgre":	
-			c.Fire = c.Postgre
-	}
 }
 
 func (c *SessionType) NewCookieStore() {
@@ -62,7 +49,8 @@ func (c *SessionType) NewCookieStore() {
 	c.Cookie = store
 }
 
-func (m *SessionType) NewMysqlStore(env conf.Config.Database.MySQL) {
+func (m *SessionType) NewMysqlStore(cfg conf.Configuration) {
+	env := cfg.Database.MySQL
 	authKey := []byte(m.Config.AuthKey)
 	//encryptionKey := []byte(m.Config.Encryption)
 	dsn := fmt.Sprintf("%v:%v@tcp(%v:%v)/%v?parseTime=true&loc=Local", 
@@ -90,8 +78,8 @@ func (m *SessionType) NewMysqlStore(env conf.Config.Database.MySQL) {
 	m.MySQL = store
 } 
 
-func (p *SessionType) NewPostgresStore(env conf.Config.Database.Postgre) {
-	
+func (p *SessionType) NewPostgresStore(cfg conf.Configuration) {
+	env := cfg.Database.Postgre
 	var url = fmt.Sprintf("dbname=%s user=%s password=%s host=%s sslmode=%s",
 				env.DBName, env.Username, env.Password, env.Host, env.SSLMode)
 
@@ -109,19 +97,19 @@ func (p *SessionType) NewPostgresStore(env conf.Config.Database.Postgre) {
 
 func Init() *SessionType {
 	//E.Use(echo.WrapMiddleware(context.ClearHandler))
+	var env = conf.Config
 	SessType.NewConfig(Session{
 		ID: "ID",
-		Type: config.TypeSession,
 		AuthKey: config.SessionAuthKey,
 		Encryption: config.SessionEncryption,
 		Expired: 7200,
 		TimeForUpdate: 3600,
 		Path: "/",
-		HttpOnly: true
-	}).Use()
+		HttpOnly: true,
+	})
 	SessType.NewCookieStore()
-	SessType.NewMysqlStore(env conf.Config.Database.MySQL)
-	SessType.NewPostgresStore(env conf.Config.Database.Postgre)
+	SessType.NewMysqlStore(env)
+	SessType.NewPostgresStore(env)
 	return &SessType
 }
 

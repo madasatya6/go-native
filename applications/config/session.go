@@ -1,7 +1,5 @@
 package config
 
-import "fmt"
-
 /****
 * Jenis penyimpanan session :
 * cookie dismpan dalam cookie
