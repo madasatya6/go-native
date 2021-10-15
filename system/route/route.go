@@ -5,6 +5,7 @@ import (
 	"html/template"
 	
 	"github.com/gorilla/mux"
+	"github.com/gorilla/context"
 	"github.com/madasatya6/go-native/routes"
 	"github.com/madasatya6/go-native/system/boot"
 )
@@ -44,7 +45,11 @@ func Init() *mux.Router {
 	route := mux.NewRouter()
 	system = &kind
 
+	//use middleware
 	route.Use(boot.Init)
+	route.Use(context.ClearHandler)
+
+	//route init
 	system.StaticAsset(route)
 	system.WebRoute(route)
 	system.APIRoute(route)
