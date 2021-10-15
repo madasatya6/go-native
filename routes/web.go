@@ -1,20 +1,16 @@
 package routes 
 
 import (
-	"net/http"
 	"github.com/gorilla/mux"
+	"github.com/madasatya6/go-native/applications/controllers/example"
 )
 
 func WebRoute(route *mux.Router) *mux.Router {
-	route.HandleFunc("/", index).Methods("GET")
-	route.HandleFunc("/mux", intro).Methods("GET")
+	route.HandleFunc("/", example.Welcome).Methods("GET")
+	route.HandleFunc("/example/session", example.Session).Methods("GET")
+
 	return route
 }
 
-func index(w http.ResponseWriter, r *http.Request) {
-    w.Write([]byte("Hallo World!"))
-}
 
-func intro(w http.ResponseWriter, r *http.Request) {
-    w.Write([]byte("Gorilla Mux!"))
-}
+
