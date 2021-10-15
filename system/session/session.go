@@ -29,6 +29,7 @@ type Session struct{
 
 type SessionType struct{
 	Config		Session
+	Fire 		*sessions.Session
 	Cookie		*sessions.CookieStore
 	MySQL 		*mysqlstore.MySQLStore
 	Postgre 	*pgstore.PGStore
@@ -36,6 +37,17 @@ type SessionType struct{
 
 func (c *SessionType) NewConfig(cfg Session) {
 	c.Config = cfg
+}
+
+func (c *SessionType) Use() {
+	switch c.Config.Type {
+		case "cookie":
+			c.Fire = c.Cookie
+		case "mysql":
+			c.Fire = c.MySQL
+		case "postgre":	
+			c.Fire = c.Postgre
+	}
 }
 
 func (c *SessionType) NewCookieStore() {
@@ -95,6 +107,25 @@ func (p *SessionType) NewPostgresStore(env conf.Config.Database.Postgre) {
 	p.Postgre = store
 }
 
+func Init() *SessionType {
+	//E.Use(echo.WrapMiddleware(context.ClearHandler))
+	SessType.NewConfig(Session{
+		ID: "ID",
+		Type: config.TypeSession,
+		AuthKey: config.SessionAuthKey,
+		Encryption: config.SessionEncryption,
+		Expired: 7200,
+		TimeForUpdate: 3600,
+		Path: "/",
+		HttpOnly: true
+	}).Use()
+	SessType.NewCookieStore()
+	SessType.NewMysqlStore(env conf.Config.Database.MySQL)
+	SessType.NewPostgresStore(env conf.Config.Database.Postgre)
+	return &SessType
+}
+
+/*
 func SetFlashdata(w http.ResponseWriter, r *http.Request, name, value string){
 	session, _ := SessionStore.Get(r, "fmessages")
 	session.AddFlash(value, name)
@@ -121,18 +152,4 @@ func GetFlashdata(w http.ResponseWriter, r *http.Request, name string) []string 
 
 	return nil
 }
-
-func Init() *SessionType {
-	//E.Use(echo.WrapMiddleware(context.ClearHandler))
-	SessType.NewConfig(Session{
-		ID: "ID",
-		Type: config.,
-		AuthKey: config.SessionAuthKey,
-		Encryption: config.SessionEncryption,
-		Expired: 7200,
-		TimeForUpdate: 3600,
-		Path: "/",
-		HttpOnly: true
-	}).NewCookieStore()
-	return &SessType
-}
+*/
