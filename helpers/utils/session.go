@@ -6,6 +6,7 @@ import (
     "github.com/gorilla/sessions"
 	"github.com/srinathgs/mysqlstore"
 	"github.com/antonlindstrom/pgstore"
+	"github.com/madasatya6/go-native/applications/config"
 )
 
 /****
@@ -17,6 +18,11 @@ var SessionPostgre *pgstore.PGStore
 
 //set type session
 var SessionStore = SessionCookie
+
+func Session(r *http.Request) (*sessions.Session, error) {
+	sess, err := SessionStore.Get(r, config.SessionID)
+	return sess, err
+}
 
 func SetFlashdata(w http.ResponseWriter, r *http.Request, name, value string){
 	session, _ := SessionStore.Get(r, "fmessages")
@@ -44,6 +50,8 @@ func GetFlashdata(w http.ResponseWriter, r *http.Request, name string) []string 
 
 	return nil
 }
+
+
 
 
 

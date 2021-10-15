@@ -37,13 +37,7 @@ func (c *SessionType) NewConfig(cfg Session) {
 	c.Config = cfg
 }
 
-func (c *SessionType) Send() {
-	utils.SessionCookie = c.Cookie
-	utils.SessionMySQL = c.MySQL
-	utils.SessionPostgre = c.Postgre
-}
-
-func (c *SessionType) NewCookieStore() {
+func (c *SessionType) SetCookieStore() {
 	authKey := []byte(c.Config.AuthKey)
 	encryptionKey := []byte(c.Config.Encryption)
 
@@ -51,7 +45,7 @@ func (c *SessionType) NewCookieStore() {
 	store.Options.Path = c.Config.Path
 	store.Options.MaxAge = c.Config.Expired
 	store.Options.HttpOnly = c.Config.HttpOnly
-
+	
 	c.Cookie = store
 }
 
@@ -101,6 +95,12 @@ func (p *SessionType) NewPostgresStore(cfg conf.Configuration) {
 	p.Postgre = store
 }
 
+func (c *SessionType) Send() {
+	utils.SessionCookie = c.Cookie
+	utils.SessionMySQL = c.MySQL
+	utils.SessionPostgre = c.Postgre
+}
+
 func Init() *SessionType {
 	
 	//set config from applications/config
@@ -113,7 +113,7 @@ func Init() *SessionType {
 		Path: config.SessionPath,
 		HttpOnly: config.HttpOnly,
 	})
-	SessType.NewCookieStore()
+	SessType.SetCookieStore()
 	SessType.Send()
 
 	//var env = conf.Config
