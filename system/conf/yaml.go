@@ -17,6 +17,7 @@ type Configuration struct{
 			Username	string `yaml:"username"`
 			Password	string `yaml:"password"`
 			TCP 		string `yaml:"tcp"`
+			Port		int	   `yaml:"port"`
 		} `yaml:"mysql"`
 		Postgre struct{
 			DBName		string `yaml:"dbname"`

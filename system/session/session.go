@@ -108,8 +108,8 @@ func Init() *SessionType {
 		HttpOnly: true,
 	})
 	SessType.NewCookieStore()
-	SessType.NewMysqlStore(env)
-	SessType.NewPostgresStore(env)
+	//SessType.NewMysqlStore(env)
+	//SessType.NewPostgresStore(env)
 	return &SessType
 }
 
