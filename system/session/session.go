@@ -4,7 +4,6 @@ import (
 	"log"
 	"os"
 	"fmt"
-
 	
 	"github.com/gorilla/sessions"
 	"github.com/srinathgs/mysqlstore"
