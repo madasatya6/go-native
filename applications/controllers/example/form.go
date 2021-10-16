@@ -27,7 +27,7 @@ func Validate(w http.ResponseWriter, r *http.Request) {
 	form.Alamat = r.PostFormValue("alamat")
 	form.Umur = r.PostFormValue("umur")
 
-	if(err := validation.FormErrorID(w, r, form); err != nil ){
+	if err := validation.FormErrorID(w, r, form); err != nil {
 		http.Redirect(w,r, "/example/form", http.StatusSeeOther)
 	}
 
