@@ -22,7 +22,7 @@ func FormValidation(w http.ResponseWriter, r *http.Request) {
 }
 
 func Validate(w http.ResponseWriter, r *http.Request) {
-
+	utils.SetContext(w,r)
 	var form Form
 	form.Nama = r.PostFormValue("nama")
 	form.Alamat = r.PostFormValue("alamat")
