@@ -7,6 +7,7 @@ import (
 	"unicode"
 	"bytes"
 
+	"github.com/madasatya6/go-native/helpers/utils"
 	"github.com/go-playground/locales/id"
 	"github.com/go-playground/universal-translator"
 	validator "gopkg.in/go-playground/validator.v9"
@@ -98,7 +99,7 @@ func FormErrorID(w http.ResponseWriter, r *http.Request) error {
 
 		for _, e := range err.(validator.ValidationErrors) {
 			data := fmt.Sprintf("%v", e.Translate(trans))
-			SetFlashdata(w, r, fmt.Sprintf("%v-msg", e.Field()), data)
+			utils.SetFlashdata(w, r, fmt.Sprintf("%v-msg", e.Field()), data)
 		}
 		
 		return err.(validator.ValidationErrors)
