@@ -27,17 +27,17 @@ type Session struct{
 }
 
 type SessionType struct{
-	Config		Session
+	Config		*Session
 	Cookie		*sessions.CookieStore
 	MySQL 		*mysqlstore.MySQLStore
 	Postgre 	*pgstore.PGStore
 }
 
-func (c *SessionType) NewConfig(cfg Session) {
+func (c *SessionType) NewConfig(cfg *Session) {
 	c.Config = cfg
 }
 
-func (c *SessionType) SetCookieStore() {
+func (c *SessionType) NewCookieStore() {
 	authKey := []byte(c.Config.AuthKey)
 	encryptionKey := []byte(c.Config.Encryption)
 
@@ -96,15 +96,15 @@ func (p *SessionType) NewPostgresStore(cfg conf.Configuration) {
 }
 
 func (c *SessionType) Send() {
-	utils.SessionCookie = c.Cookie
-	utils.SessionMySQL = c.MySQL
-	utils.SessionPostgre = c.Postgre
+	utils.SetCookie(c.Cookie)
+	utils.SetMySQL(c.MySQL)
+	utils.SetPostgre(c.Postgre)
 }
 
 func Init() *SessionType {
 	
 	//set config from applications/config
-	SessType.NewConfig(Session{
+	SessType.NewConfig(&Session{
 		ID: config.SessionID,
 		AuthKey: config.SessionAuthKey,
 		Encryption: config.SessionEncryption,
@@ -113,11 +113,12 @@ func Init() *SessionType {
 		Path: config.SessionPath,
 		HttpOnly: config.HttpOnly,
 	})
-	SessType.SetCookieStore()
+	SessType.NewCookieStore()
 	SessType.Send()
 
 	//var env = conf.Config
 	//SessType.NewMysqlStore(env)
 	//SessType.NewPostgresStore(env)
+	
 	return &SessType
 }

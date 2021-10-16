@@ -17,10 +17,11 @@ var SessionMySQL *mysqlstore.MySQLStore
 var SessionPostgre *pgstore.PGStore
 
 //set type session
-var SessionStore = SessionCookie
+var SessionStore = newCookieStore()
 
 func Session(r *http.Request) (*sessions.Session, error) {
-	sess, err := SessionStore.Get(r, config.SessionID)
+	//SessionCookie = newCookieStore()
+	sess, err := SessionCookie.Get(r, config.SessionID)
 	return sess, err
 }
 
@@ -51,7 +52,29 @@ func GetFlashdata(w http.ResponseWriter, r *http.Request, name string) []string 
 	return nil
 }
 
+func SetCookie(ck *sessions.CookieStore){
+	SessionCookie = ck
+}
 
+func SetMySQL(sess *mysqlstore.MySQLStore){
+	SessionMySQL = sess
+}
+
+func SetPostgre(sess *pgstore.PGStore){
+	SessionPostgre = sess
+}
+
+func newCookieStore() *sessions.CookieStore {
+	authKey := []byte("my-auth-key-very-secret")
+	encryptionKey := []byte("my-encryption-key-very-secret123")
+
+	store := sessions.NewCookieStore(authKey,encryptionKey)
+	store.Options.Path = "/"
+	store.Options.MaxAge = 86400 * 7 //expired dalam seminggu
+	store.Options.HttpOnly = true
+
+	return store
+}
 
 
 
