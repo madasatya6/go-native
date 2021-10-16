@@ -25,3 +25,11 @@ func Session(w http.ResponseWriter, r *http.Request) {
     w.Write([]byte(data))
 }
 
+func FlashSession(w http.ResponseWriter, r *http.Request) {
+
+	utils.SetFlashdata(w, r, "Name", "Mada Satya")
+
+	data := fmt.Sprintf("Tutorial Session %v ", utils.GetFlashdata(w, r, "Name"))
+    w.Write([]byte(data))
+}
+

@@ -8,6 +8,7 @@ import (
 func WebRoute(route *mux.Router) *mux.Router {
 	route.HandleFunc("/", example.Welcome).Methods("GET")
 	route.HandleFunc("/example/session", example.Session).Methods("GET")
+	route.HandleFunc("/example/session/flash", example.FlashSession).Methods("GET")
 
 	return route
 }
