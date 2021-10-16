@@ -14,7 +14,7 @@ import (
 	id_translations "gopkg.in/go-playground/validator.v9/translations/id"
 )
 
-func FormErrorID(w http.ResponseWriter, r *http.Request) error {
+func FormErrorID(w http.ResponseWriter, r *http.Request, a interface{}) error {
 
 	translator := id.New()
 	uni := ut.New(translator, translator)
