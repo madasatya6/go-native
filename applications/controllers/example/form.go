@@ -13,4 +13,7 @@ func FormValidation(w http.ResponseWriter, r *http.Request) {
     utils.Render(w, "example/form-validation.html", data)
 }
 
+func Validate(w http.ResponseWriter, r *http.Request) {
+	
+}
 
