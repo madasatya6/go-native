@@ -13,7 +13,7 @@ import (
 * CLEAN ARCHITECTURE GOLANG
 * 
 * @author Mada Satya Bayu Ambika
-* @version 1.0
+* @version 1.13
 * @link https://github.com/madasatya6
 * @gorillamux
 *
@@ -23,7 +23,7 @@ import (
 
 func main() {
     var wg sync.WaitGroup
-    fmt.Println("Golang Clean Architecture")
+    fmt.Println("Go Clean Architecture by madasatya6")
 	
 	systems := system.Init()
     router := systems.Route
