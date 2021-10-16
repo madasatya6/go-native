@@ -1,0 +1,17 @@
+{{define "main"}}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{.title}}</title>
+    </head>
+    <body>
+		<h3>Form Data Diri</h3>
+		<br/>
+		<form action="/example/validate" method="post" enctype="multipart/form-data">
+			Nama : <input type="text" name="nama" placeholder="Nama"/> <br/>
+			Alamat : <input type="text" name="alamat" placeholder="Alamat" /> <br/>
+			<input type="submit" name="save" value="Posting"/>
+		</form>
+    </body>
+</html>
+{{end}}
