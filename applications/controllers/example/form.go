@@ -14,6 +14,7 @@ type Form struct{
 }
 
 func FormValidation(w http.ResponseWriter, r *http.Request) {
+	utils.SetContext(w,r)
 	var data = map[string]interface{}{
 		"title": "Learning html/template Actions",
 	}

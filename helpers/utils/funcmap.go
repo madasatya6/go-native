@@ -14,6 +14,14 @@ import (
 	"github.com/gorilla/mux"
 )
 
+var Response http.ResponseWriter
+var Request *http.Request
+
+func SetContext(w http.ResponseWriter, r *http.Request){
+	Response = w 
+	Request = r
+}
+
 var FuncMap = template.FuncMap{
     "sumi": func(a,b int) int {
 		return a+b
@@ -128,9 +136,9 @@ var FuncMap = template.FuncMap{
 		}
 		return temp
 	},
-	"FormError" : func(w http.ResponseWriter, r *http.Request, key string) string {
+	"FormError" : func(key string) string {
 		var keyMsg = key+"-msg"
-		var sess = GetFlashdata(w, r, keyMsg)
+		var sess = GetFlashdata(Response, Request, keyMsg)
 		var data = ArraytoString(sess)
 		return data
 	},
