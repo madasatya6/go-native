@@ -15,17 +15,17 @@
 		<form action="/example/validate" method="post" enctype="multipart/form-data">
 			<table border="0">
 				<tr>
-					<td>Nama <p>{{FormError "Nama"}}</p></td>
+					<td>Nama <p>{{FormError .Response .Request "Nama"}}</p></td>
 					<td>:</td>
 					<td><input type="text" name="nama" placeholder="Nama"/></td>
 				</tr>
 				<tr>
-					<td>Alamat <p>{{FormError "Alamat"}}</p></td>
+					<td>Alamat <p>{{FormError .Response .Request "Alamat"}}</p></td>
 					<td>:</td>
 					<td><input type="text" name="alamat" placeholder="Alamat" /></td>
 				</tr>
 				<tr>
-					<td>Umur <p>{{FormError "Umur"}}</p></td>
+					<td>Umur <p>{{FormError .Response .Request "Umur"}}</p></td>
 					<td>:</td>
 					<td><input type="text" name="umur" placeholder="Umur" /></td>
 				</tr>

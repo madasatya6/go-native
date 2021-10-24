@@ -19,7 +19,7 @@ type Features struct {
 	Databases	*database.Databases
 	Conf 		*conf.Configuration
 	Time		*times.TimeConf
-	Session 	*session.SessionType
+	Session 	session.SessionType
 } 
 
 func Init() *Features {

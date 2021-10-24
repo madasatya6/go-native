@@ -136,9 +136,9 @@ var FuncMap = template.FuncMap{
 		}
 		return temp
 	},
-	"FormError" : func(key string) string {
+	"FormError" : func(w http.ResponseWriter, r *http.Request, key string) string {
 		var keyMsg = key+"-msg"
-		var sess = GetFlashdata(Response, Request, keyMsg)
+		var sess = GetFlashdata(w, r, keyMsg)
 		var data = ArraytoString(sess)
 		return data
 	},

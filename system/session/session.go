@@ -101,7 +101,7 @@ func (c *SessionType) Send() {
 	utils.SetPostgre(c.Postgre)
 }
 
-func Init() *SessionType {
+func Init() SessionType {
 	
 	//set config from applications/config
 	SessType.NewConfig(&Session{
@@ -120,5 +120,5 @@ func Init() *SessionType {
 	//SessType.NewMysqlStore(env)
 	//SessType.NewPostgresStore(env)
 	
-	return &SessType
+	return SessType
 }

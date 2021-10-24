@@ -2,6 +2,8 @@ package utils
 
 import (
 	"net/http"
+	"net/url"
+	"encoding/gob"
 	
     "github.com/gorilla/sessions"
 	"github.com/srinathgs/mysqlstore"
@@ -29,6 +31,7 @@ func SetFlashdata(w http.ResponseWriter, r *http.Request, name, value string){
 }
 
 func GetFlashdata(w http.ResponseWriter, r *http.Request, name string) []string {
+	
 	session, _ := SessionCookie.Get(r, "fmessages")
 	fm := session.Flashes(name)
 	//IF we have some message
@@ -44,7 +47,7 @@ func GetFlashdata(w http.ResponseWriter, r *http.Request, name string) []string 
 		
 		return flashes
 	}
-
+	
 	return nil
 }
 
@@ -58,6 +61,10 @@ func SetMySQL(sess *mysqlstore.MySQLStore){
 
 func SetPostgre(sess *pgstore.PGStore){
 	SessionPostgre = sess
+}
+
+func init() {
+    gob.Register(&url.Values{})
 }
 
 

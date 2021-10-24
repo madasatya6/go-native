@@ -14,22 +14,29 @@ type Form struct{
 }
 
 func FormValidation(w http.ResponseWriter, r *http.Request) {
-	utils.SetContext(w,r)
+
 	var data = map[string]interface{}{
+		"Response" : w,
+		"Request" : r,
 		"title": "Learning html/template Actions",
 	}
+
+	w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate") // HTTP 1.1. 
+	w.Header().Set("Pragma", "no-cache") // HTTP 1.0. 
+	w.Header().Set("Expires", "0") // Proxies.
+
     utils.Render(w, "example/form-validation.html", data)
 }
 
 func Validate(w http.ResponseWriter, r *http.Request) {
-	utils.SetContext(w,r)
+	
 	var form Form
 	form.Nama = r.PostFormValue("nama")
 	form.Alamat = r.PostFormValue("alamat")
 	form.Umur = r.PostFormValue("umur")
 
 	if err := validation.FormErrorID(w, r, form); err != nil {
-		http.Redirect(w,r, "/example/form", http.StatusSeeOther)
+		http.Redirect(w,r, "/example/form", http.StatusFound)
 	}
 
 	var data = map[string]interface{}{
